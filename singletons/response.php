@@ -88,10 +88,10 @@ class JSON_API_Response {
       }
       echo $this->prettify($json);
     } else if (!empty($_REQUEST[$status_redirect])) {
-      wp_redirect($_REQUEST[$status_redirect]);
+      wp_safe_redirect($_REQUEST[$status_redirect]);
     } else if ($json_api->query->redirect) {
       $url = $this->add_status_query_var($json_api->query->redirect, $status);
-      wp_redirect($url);
+      wp_safe_redirect($url);
     } else if ($json_api->query->callback) {
       // Run a JSONP-style callback with the result
       $this->callback($json_api->query->callback, $json);
