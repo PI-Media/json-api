@@ -228,7 +228,6 @@ class JSON_API_Introspector {
       FROM $wpdb->comments
       WHERE comment_post_ID = %d
         AND comment_approved = 1
-        AND comment_type = '' OR comment_type = 'comment'
       ORDER BY comment_date
     ", $post_id));
     $comments = array();
