@@ -87,11 +87,12 @@ class JSON_API_Query {
   }
   
   function strip_magic_quotes($value) {
-    if (get_magic_quotes_gpc()) {
-      return stripslashes($value);
-    } else {
+    // Deprecated!
+	//if (get_magic_quotes_gpc()) {
+    //  return stripslashes($value);
+    //} else {
       return $value;
-    }
+    //}
   }
   
   function query_vars($wp_vars) {
@@ -192,3 +193,4 @@ class JSON_API_Query {
   }
   
 }
+?>
