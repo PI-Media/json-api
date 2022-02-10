@@ -69,9 +69,11 @@ class JSON_API_Core_Controller {
       );
       if ($previous) {
         $response['previous_url'] = get_permalink($previous->ID);
+        $response['previous_post_title'] = $previous->post_title;
       }
       if ($next) {
         $response['next_url'] = get_permalink($next->ID);
+        $response['next_post_title'] = $next->post_title;
       }
       return $response;
     } else {
@@ -151,12 +153,14 @@ class JSON_API_Core_Controller {
   public function get_category_posts() {
     global $json_api;
     $category = $json_api->introspector->get_current_category();
+	
     if (!$category) {
       $json_api->error("Not found.");
     }
     $posts = $json_api->introspector->get_posts(array(
       'cat' => $category->id
     ));
+	
     return $this->posts_object_result($posts, $category);
   }
   
@@ -264,6 +268,27 @@ class JSON_API_Core_Controller {
     );
   }
   
+  
+  public function get_menu() {
+
+    global $json_api;
+    $menu = $json_api->introspector->get_menu();
+    return array(
+      'menu' => $menu
+    );
+
+  }
+
+  public function get_list_menu() {
+
+    global $json_api;
+    $menu = $json_api->introspector->get_list_menu();
+    return array(
+      'menus' => $menu
+    );
+
+  }
+  
   public function get_nonce() {
     global $json_api;
     extract($json_api->query->get(array('controller', 'method')));
@@ -336,4 +361,3 @@ class JSON_API_Core_Controller {
   
 }
 
-?>

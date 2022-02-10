@@ -4,8 +4,8 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: json, api, ajax, cms, admin, integration, moma, rest api, RESTful API, REST JSON API
 Requires at least: 3.0.1
 Requires PHP: 5.3
-Tested up to: 5.2.2
-Stable tag: 2.0.0
+Tested up to: 5.9
+Stable tag: 2.2.0
 
 A RESTful API for WordPress
 
@@ -1036,6 +1036,9 @@ You should see the test results print out culminating in a summary:
     0 SKIPPED TESTS
 
 == Changelog ==
+
+= 2.2.0 =
+* Updated readme file, updated code to make it compatible with 5.9 version of WordPress
 
 = 2.0.0 (2019-08-15): =
 * Updated readme file, updated code to make it compatible with 5.2.2 version of WordPress

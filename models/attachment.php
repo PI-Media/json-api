@@ -11,7 +11,7 @@ class JSON_API_Attachment {
   var $parent;      // Integer
   var $mime_type;   // String
   
-  function JSON_API_Attachment($wp_attachment = null) {
+  function __construct($wp_attachment = null) {
     if ($wp_attachment) {
       $this->import_wp_object($wp_attachment);
       if ($this->is_image()) {
@@ -42,17 +42,17 @@ class JSON_API_Attachment {
     }
     $this->images = array();
     $home = get_bloginfo('url');
-    foreach ($sizes as $size) {
-      list($url, $width, $height) = wp_get_attachment_image_src($this->id, $size);
-      $filename = ABSPATH . substr($url, strlen($home) + 1);
+    $attachment = wp_get_attachment_metadata($this->id);
+    foreach ($attachment['sizes'] as $size => $data) {
+      $filename = WP_CONTENT_DIR . '/uploads/' . pathinfo($attachment['file'])['dirname'] . '/' . $data['file'];
       if (file_exists($filename)) {
         list($measured_width, $measured_height) = getimagesize($filename);
-        if ($measured_width == $width &&
-            $measured_height == $height) {
+        if ($measured_width == $data['width'] &&
+            $measured_height == $data['height']) {
           $this->images[$size] = (object) array(
-            'url' => $url,
-            'width' => $width,
-            'height' => $height
+            'url' => wp_get_attachment_image_src($this->id, $size)[0],
+            'width' => $data['width'],
+            'height' => $data['height']
           );
         }
       }
@@ -61,4 +61,3 @@ class JSON_API_Attachment {
   
 }
 
-?>
