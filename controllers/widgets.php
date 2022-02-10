@@ -105,4 +105,4 @@ class JSON_API_Widgets_Controller {
   
 }
 
-?>
+
