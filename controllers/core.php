@@ -268,6 +268,27 @@ class JSON_API_Core_Controller {
     );
   }
   
+  
+  public function get_menu() {
+
+    global $json_api;
+    $menu = $json_api->introspector->get_menu();
+    return array(
+      'menu' => $menu
+    );
+
+  }
+
+  public function get_list_menu() {
+
+    global $json_api;
+    $menu = $json_api->introspector->get_list_menu();
+    return array(
+      'menus' => $menu
+    );
+
+  }
+  
   public function get_nonce() {
     global $json_api;
     extract($json_api->query->get(array('controller', 'method')));
