@@ -1037,8 +1037,8 @@ You should see the test results print out culminating in a summary:
 
 == Changelog ==
 
-= 2.2.0 =
-* Updated readme file, updated code to make it compatible with 5.9 version of WordPress
+= 2.2.0 (2022-02-10): =
+* Updated readme file, updated code to make it compatible with 5.9 version of WordPress and updated code to make it compatible with 8 version of PHP
 
 = 2.0.0 (2019-08-15): =
 * Updated readme file, updated code to make it compatible with 5.2.2 version of WordPress
