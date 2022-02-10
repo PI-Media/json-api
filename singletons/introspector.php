@@ -106,6 +106,22 @@ class JSON_API_Introspector {
     }
   }
   
+  public function get_menu() {
+    global $json_api;
+    extract($json_api->query->get(array('name')));
+
+    $items = wp_get_nav_menu_items($name);
+    return $items;
+
+  }
+  public function get_list_menu() {
+    global $json_api;
+    $menus = get_terms('nav_menu');
+    //$items = get_registered_nav_menus();
+    return $menus;
+
+  }
+
   public function get_current_category() {
     global $json_api;
     extract($json_api->query->get(array('id', 'slug', 'category_id', 'category_slug')));
@@ -342,3 +358,5 @@ class JSON_API_Introspector {
   }
   
 }
+
+?>
