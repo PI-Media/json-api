@@ -74,7 +74,7 @@ class JSON_API_Response {
     }
   }
   
-  function respond($result, $status = 'ok', $header) {
+  function respond($result, $status = 'ok', $header = '200 OK') {
     global $json_api;
     $json = $this->get_json($result, $status);
     $status_redirect = "redirect_$status";
