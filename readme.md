@@ -1,11 +1,11 @@
 === JSON API ===
-Contributors: dphiffer, parorrey, SviluppoMania.com
-Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DH4MEG99JR2WE
+Contributors: dphiffer, parorrey
+Donate link: 
 Tags: json, api, ajax, cms, admin, integration, moma, rest api, RESTful API, REST JSON API
 Requires at least: 3.0.1
 Requires PHP: 5.3
-Tested up to: 5.9
-Stable tag: 2.2.0
+Tested up to: 6.0
+Stable tag: 2.3.0
 
 A RESTful API for WordPress
 
