@@ -105,7 +105,7 @@ class JSON_API_Response {
   function output($result, $header) {
     $charset = get_option('blog_charset');
     if (!headers_sent()) {
-      header("HTTP/1.1 ${$header}", true);
+      header("HTTP/1.1 $header", true);
       header("Content-Type: application/json; charset=$charset", true);
     }
     echo $result;
