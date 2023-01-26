@@ -69,7 +69,8 @@ class JSON_API_Users_Controller {
       @get_currentuserinfo();
 
       if(
-             empty($current_user)
+             WP_DEBUG
+          && empty($current_user)
           && function_exists('error_get_last')
       )
       {
@@ -460,7 +461,7 @@ class JSON_API_Users_Controller {
 
     $this->_verify_admin();
 
-    $blogusers = get_users_of_blog();
+    $blogusers = @get_users_of_blog();
     
     if(
            WP_DEBUG
