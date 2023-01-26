@@ -65,7 +65,26 @@ class JSON_API_Users_Controller {
 
     if ( is_user_logged_in() ) {
       global $current_user;
-      get_currentuserinfo();
+
+      @get_currentuserinfo();
+
+      if(
+             empty($current_user)
+          && function_exists('error_get_last')
+      )
+      {
+          $error = error_get_last();
+
+          if(
+                 isset($error['message'])
+              && stripos($error['message'], 'get_currentuserinfo') !== false
+              && stripos($error['message'], 'wp_get_current_user()') !== false
+              && function_exists('wp_get_current_user')
+          )
+          {
+              wp_get_current_user();
+          }
+      }
 
       return array( "user" => $current_user );
     } else {
