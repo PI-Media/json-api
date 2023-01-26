@@ -125,7 +125,7 @@ class JSON_API_Users_Controller {
 
     nocache_headers();
 
-    require_once(ABSPATH . WPINC . '/registration.php');
+    @require_once(ABSPATH . WPINC . '/registration.php');
 
     if(isset($_REQUEST['user_password']))
       $password = $_REQUEST['user_password'];
@@ -178,7 +178,10 @@ class JSON_API_Users_Controller {
     if(isset($_REQUEST['yim']))
       $userdata['yim'] = $_REQUEST['yim'];
 
-    $user_id = wp_insert_user( $userdata );
+    if($updating)
+      $user_id = wp_update_user( $userdata );
+    else
+      $user_id = wp_insert_user( $userdata );
 
     if($updating)
       $user_id = $_REQUEST['id'];
@@ -326,7 +329,7 @@ class JSON_API_Users_Controller {
     {
       $admin_email = get_option('admin_email');
 
-      require_once(ABSPATH . WPINC . '/registration.php');
+      @require_once(ABSPATH . WPINC . '/registration.php');
 
       $reassign = email_exists($admin_email);
     }
@@ -439,6 +442,25 @@ class JSON_API_Users_Controller {
     $this->_verify_admin();
 
     $blogusers = get_users_of_blog();
+    
+    if(
+           WP_DEBUG
+        && empty($blogusers)
+        && function_exists('error_get_last')
+    )
+    {
+        $error = error_get_last();
+
+        if(
+               isset($error['message'])
+            && stripos($error['message'], 'get_users_of_blog') !== false
+            && stripos($error['message'], 'get_users()') !== false
+            && function_exists('get_users')
+        )
+        {
+            $blogusers = get_users();
+        }
+    }
 
     return $blogusers;
   }
@@ -464,9 +486,33 @@ class JSON_API_Users_Controller {
 
     if (!current_user_can('administrator'))
     {
-      if( isset($u) and isset($p) ) {
-        if( !user_pass_ok($u, $p) )
-          $json_api->error(__("Your username or password was incorrect."));
+      if( isset($u) and isset($p) ) 
+      {
+        if( !@user_pass_ok($u, $p) )
+        {
+            $json_api->error(__("Your username or password was incorrect."));
+        }
+
+        if(
+               WP_DEBUG
+            && function_exists('error_get_last')
+        )
+        {
+            $error = error_get_last();
+
+            if(
+                   isset($error['message'])
+                && stripos($error['message'], 'user_pass_ok') !== false
+                && stripos($error['message'], 'wp_authenticate()') !== false
+                && function_exists('wp_authenticate')
+            )
+            {
+                if(!wp_authenticate($u, $p))
+                {
+                    $json_api->error(__("Your username or password was incorrect."));
+                }
+            }
+        }
       }
       else
         $json_api->error(__("You must either provide the 'u' and 'p' parameters or login as an administrator."));
