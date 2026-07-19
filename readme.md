@@ -1,3 +1,48 @@
+# ⚠️ Deprecated — This Plugin Has Been Superseded
+
+> **This repository is no longer maintained.**  
+> It is archived for historical reference only. Please use the actively maintained replacement below.
+
+---
+
+## RESTful JSON API
+
+The successor to this legacy JSON API plugin is **RESTful JSON API**, now published on WordPress.org.
+
+[![WordPress Plugin](https://img.shields.io/badge/WordPress.org-RESTful%20JSON%20API-blue?logo=wordpress)](https://wordpress.org/plugins/restful-json-api/)
+
+### 🔗 [wordpress.org/plugins/restful-json-api/](https://wordpress.org/plugins/restful-json-api/)
+
+---
+
+### What's new in RESTful JSON API
+
+- 40+ JSON endpoints for posts, pages, CPTs, taxonomies, media, comments, widgets, and users
+- JWT bearer token authentication (replaces cookie-based auth)
+- Optional shared API-key protection
+- CORS allowed-origin settings
+- HTTPS enforcement for protected endpoints
+- Tested up to WordPress 7.0
+
+---
+
+### Migration
+
+If you are currently using this legacy `json-api` plugin, install **RESTful JSON API** and deactivate this one. The base endpoint structure is compatible for read-only core methods; authentication has moved to JWT — see [Settings > RESTful JSON API > Documentation] after installation.
+
+---
+
+### Legacy Plugin
+
+- **Original author:** [Dan Phiffer](https://github.com/dphiffer) (MoMA)
+- **Maintained by:** [Ali Qureshi / PI Media](https://www.parorrey.com) (v2.x)
+- **Last version:** 2.3.0
+- **Status:** Archived — no further updates
+
+---
+
+*Built by [PI Media](https://www.parorrey.com) · [parorrey.com](https://www.parorrey.com)*
+
 === JSON API ===
 Contributors: dphiffer, parorrey
 Donate link: 
