@@ -1,0 +1,29 @@
+<?php 
+function sendrequest($URL) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $URL);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 120); //timeout after 30 seconds
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 120);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_REFERER, "http://epanrita.id"); 
+   
+    $headers = array(
+    'Content-Type:application/x-www-form-urlencoded',
+     'Authorization: Basic '
+    );
+
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, false);
+    $result = curl_exec($ch);
+
+    return $result; 
+}
+	$pin='893'; // isi PIN dari web epanrita.id
+	$key='9cad64059849e25c5443bd0fbce147ee'; // isi KEY dari web epanrita.id
+	$URL="https://epanrita.id/api/lapkeu/rkas/index.php?pin=".$pin."&key=".$key;
+	$hasil=sendrequest($URL);
+	$post=json_decode($hasil,true);
+	?>
