@@ -1,10 +1,10 @@
 === JSON API ===
-Contributors: dphiffer, parorrey
+Contributors: dphiffer, parorrey, SviluppoMania.com
 Donate link: 
 Tags: json, api, ajax, cms, admin, integration, moma, rest api, RESTful API, REST JSON API
 Requires at least: 3.0.1
-Requires PHP: 5.3
-Tested up to: 6.0
+Requires PHP: 7.4.0
+Tested up to: 6.1.1
 Stable tag: 2.3.0
 
 A RESTful API for WordPress
