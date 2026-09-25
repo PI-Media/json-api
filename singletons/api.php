@@ -55,38 +55,31 @@ class JSON_API {
           $this->error('Not found');
         }
         
-        // Build transient slug using method (and query params if set)
-        $transient_slug = 'json-api-';
-        $transient_slug .= $method;
+        $cacheable = $this->is_cacheable_request($controller, $method);
+        $transient_slug = $this->cache_key($controller, $method);
 
-        $url = parse_url($_SERVER['REQUEST_URI']);
-
-        if($url['query'] !== null):
-          $args = wp_parse_args($url['query']);
-          $transient_slug .= '-' . implode('-', array_keys($args));
-          $transient_slug .= '-' . implode('-', $args);
-        endif;
-
-        // Transient slug must be less than 45 characters (http://codex.wordpress.org/Transients_API)
-        if(strlen($transient_slug) > 40):
-          $transient_slug = 'json-api-' . md5($transient_slug);
-        endif;
-
-        if ( is_user_logged_in() ):
-          // Never show cached content to a logged-in user
+        if (!$cacheable) {
+          // Protected and state-changing responses must not be stored by any
+          // WordPress, proxy, or browser cache.
+          nocache_headers();
+          if (!headers_sent()) {
+            header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0', true);
+            header('Pragma: no-cache', true);
+          }
           $cached = false;
-        else:
-          // Check for cached value
+        } else {
           $cached = get_transient($transient_slug);
-        endif;
+        }
 
         if($cached !== false):
           // Use the cached result
           $result = $cached;
         else:
-          // Run the method and cache result for 24 hours
+          // Run the method. Cache only public, idempotent, non-sensitive data.
           $result = $this->controller->$method();
-          set_transient( $transient_slug, $result, 24 * 3600 );
+          if ($cacheable && !$this->contains_auth_material($result)) {
+            set_transient( $transient_slug, $result, 24 * 3600 );
+          }
         endif;
         
         // Handle the result
@@ -96,6 +89,80 @@ class JSON_API {
         exit;
       }
     }
+  }
+
+  /**
+   * Only anonymous GET/HEAD requests to public controllers are cacheable.
+   */
+  function is_cacheable_request($controller, $method) {
+    $request_method = isset($_SERVER['REQUEST_METHOD']) ? strtoupper($_SERVER['REQUEST_METHOD']) : 'GET';
+    $cacheable = in_array($request_method, array('GET', 'HEAD'), true);
+
+    if (defined('JSON_API_NO_CACHE') && JSON_API_NO_CACHE) {
+      $cacheable = false;
+    }
+    if (is_user_logged_in() || 'auth' === strtolower($controller)) {
+      $cacheable = false;
+    }
+    if (!empty($_SERVER['HTTP_AUTHORIZATION']) || !empty($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+      $cacheable = false;
+    }
+
+    $sensitive_args = array('cookie', 'password', 'nonce', 'token', 'access_token', 'refresh_token');
+    foreach ($sensitive_args as $arg) {
+      if (isset($_REQUEST[$arg])) {
+        $cacheable = false;
+        break;
+      }
+    }
+
+    return (bool) apply_filters('json_api_cache_enabled', $cacheable, $controller, $method);
+  }
+
+  /**
+   * Include controller, HTTP method, query and a POST-body hash in cache keys.
+   * Secret request values are hashed and are never exposed in transient names.
+   */
+  function cache_key($controller, $method) {
+    $request_method = isset($_SERVER['REQUEST_METHOD']) ? strtoupper($_SERVER['REQUEST_METHOD']) : 'GET';
+    $request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+    $url = parse_url($request_uri);
+    $query = array();
+    if (!empty($url['query'])) {
+      parse_str($url['query'], $query);
+      ksort($query);
+    }
+    $body = is_array($_POST) ? $_POST : array();
+    ksort($body);
+
+    $signature = array(
+      'controller' => strtolower($controller),
+      'method' => strtolower($method),
+      'http_method' => $request_method,
+      'query' => $query,
+      'body_hash' => hash('sha256', serialize($body)),
+    );
+
+    return 'json-api-' . md5(serialize($signature));
+  }
+
+  /**
+   * Refuse to cache any response that appears to carry authentication data.
+   */
+  function contains_auth_material($value) {
+    if (!is_array($value) && !is_object($value)) {
+      return false;
+    }
+    foreach ((array) $value as $key => $item) {
+      $normalized = strtolower((string) $key);
+      if (preg_match('/(^|_)(cookie|token|authorization)(_|$)/', $normalized)) {
+        return true;
+      }
+      if ((is_array($item) || is_object($item)) && $this->contains_auth_material($item)) {
+        return true;
+      }
+    }
+    return false;
   }
   
   function admin_menu() {

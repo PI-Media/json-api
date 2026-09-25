@@ -36,8 +36,8 @@ If you are currently using this legacy `json-api` plugin, install **RESTful JSON
 
 - **Original author:** [Dan Phiffer](https://github.com/dphiffer) (MoMA)
 - **Maintained by:** [Ali Qureshi / PI Media](https://www.parorrey.com) (v2.x)
-- **Last version:** 2.3.0
-- **Status:** Archived — no further updates
+- **Last version:** 2.3.1 (security release)
+- **Status:** Archived — security fix only; migrate new integrations to RESTful JSON API
 
 ---
 
@@ -50,7 +50,7 @@ Tags: json, api, ajax, cms, admin, integration, moma, rest api, RESTful API, RES
 Requires at least: 3.0.1
 Requires PHP: 5.3
 Tested up to: 6.0
-Stable tag: 2.3.0
+Stable tag: 2.3.1
 
 A RESTful API for WordPress
 
@@ -1081,6 +1081,12 @@ You should see the test results print out culminating in a summary:
     0 SKIPPED TESTS
 
 == Changelog ==
+
+= 2.3.1 (2026-09-25): =
+* Security: Cache only anonymous GET and HEAD requests to public controllers.
+* Security: Never cache Auth controller responses, authenticated requests, requests carrying credentials, or responses containing authentication material.
+* Security: Include the controller, HTTP method, sorted query parameters, and a POST-body hash in transient cache keys.
+* Security: Send no-store headers for protected and state-changing API requests.
 
 = 2.2.0 (2022-02-10): =
 * Updated readme file, updated code to make it compatible with 5.9 version of WordPress and updated code to make it compatible with 8 version of PHP
